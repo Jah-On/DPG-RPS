@@ -1,5 +1,5 @@
 # DPG-RPS
-## *Rock, Paper, Sockets*
+## *Rock, Paper, Sockets!*
 
 
 ### Prequisites
