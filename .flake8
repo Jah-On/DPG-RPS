@@ -1,0 +1,20 @@
+[flake8]
+exclude =
+    .git,
+    __pycache__,
+    dist,
+    old
+max-line-length = 88
+ignore = 
+    # Ignore file not ending with newline
+    W292,
+    # Ignore unused imports
+    F401,
+    # Ignore missing placeholders for f-strings
+    F541,
+    # Variable created but never accessed. Handled by Pylance, currently.
+    F841,
+    # Too many leading # for block comment
+    E266,
+    # Ignore comparing bools with == instead of is and is not
+    E712,
