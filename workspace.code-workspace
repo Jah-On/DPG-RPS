@@ -6,7 +6,8 @@
 	],
 	"settings": {
 		"conventionalCommits.scopes": [
-			"build"
+			"build",
+			"gui"
 		]
 	}
 }
