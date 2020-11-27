@@ -12,6 +12,12 @@ def socketer
 def selector(num):
     global choice
     choice = num
+    if (num == 1):
+        s1.send(b'\x31') # Paper
+    elif (num < 1):
+        s1.send(b'\x30') # Rock
+    else:
+        s1.send(b'\x32') # Scissors
 
 with window("_main"):
     pass
