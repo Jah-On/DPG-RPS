@@ -7,7 +7,22 @@ import threading
 s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 choice = -1
 
-def socketer
+def socketer():
+    while (True):
+        gotData = s1.recv(32)
+        while (len(gotData) == 0):
+            gotData = s1.recv(32)
+        pass
+
+class GUI:
+    def mainScreen():
+        pass
+
+    def gameScreen():
+        pass
+
+    def disconnectedScreen():
+        pass
 
 def selector(num):
     global choice
@@ -21,3 +36,5 @@ def selector(num):
 
 with window("_main"):
     pass
+
+start_dearpygui(primary_window="_main")
