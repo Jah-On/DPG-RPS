@@ -100,9 +100,11 @@ def submit_move(var_name: type) -> bool:
 ```
 
 * def authenticate(user, pass):
-  * Returns a NamedTuple of (`Server`, `User`) objects if successful
-  * Raises AuthenticatioxnError if unsuccessful
+  * Returns a NamedTuple of format (`Server`, `User`) if successful.
+  * Raises AuthenticationError if unsuccessful
 * def register_new_user(user, pass):
+    * Returns True if successful
+    * Raises RegistrationError otherwise
 * def request_connection(user_identifier_object):
 * def request_available_players():
   * gets a list of players in the server lobby, in order to request an opponent
