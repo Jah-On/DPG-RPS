@@ -132,3 +132,6 @@ dmypy.json
 
 # sqlite3 database files
 *.db
+
+# VS Code Workspace files
+workspace.code-workspace
