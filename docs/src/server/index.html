@@ -22,6 +22,107 @@
 <h1 class="title">Module <code>src.server</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from abc import ABC
+
+
+class Snowflake(ABC):
+    &#34;&#34;&#34;Base class for all game objects.
+
+    Attributes:
+        id (int): Unique ID for object
+
+
+    &#34;&#34;&#34;
+
+    ...
+
+
+class Connection(Snowflake):
+    &#34;&#34;&#34;Object for management of socket connection
+
+    Attributes:
+        id (int): Unique ID for object
+        socket (Socket)
+        user (User)
+
+    Functions:
+        send_data(data)        # Really necessary?
+        send_command(Command)  # Really necessary?
+
+
+    &#34;&#34;&#34;
+
+
+class Command(Snowflake):
+    &#34;&#34;&#34;An instruction packet, received by client from server.
+
+    Contains instructions that trigger state changes in the UI.
+    Should always be subclassed, with more specific information made available
+    for each type of Command (display_game_over, await_response, )
+
+    Attributes:
+        id (int): Unique ID for object
+
+
+    Functions:
+        execute()
+            * contains the functions necessary to trigger change in the client
+
+    &#34;&#34;&#34;
+
+
+# // TODO: Implement below list of commands as subclasses.
+
+# Command List:
+# * prompt_move
+# * display_result
+# * wait_for_result
+# * prompt_new_game
+
+
+class Game(Snowflake):
+    &#34;&#34;&#34;A class for housing game logic and managing the game&#39;s internal state.
+
+    Attributes:
+        id (int): Unique ID for object
+        current_state
+        move_history
+        players_in_game
+
+    Functions:
+        get_game_state()
+            * return a serializable, file writable, importable save state.
+        load_game_state(state_file)
+            * restores internal game state from file.
+        submit_move(move)
+
+    &#34;&#34;&#34;
+
+
+class User(Snowflake):
+    &#34;&#34;&#34;An object with basic user information.
+
+    Attributes:
+        id (int): Unique ID for object
+        name (str): The user&#39;s display name
+
+    &#34;&#34;&#34;
+
+
+class Move(Snowflake):
+    &#34;&#34;&#34;An object containing information about the move and the user
+
+    Attributes:
+        id (int): Unique ID for object
+        move (str): either &#34;rock&#34;, &#34;paper&#34;, or &#34;scissors&#34;
+        user (User): the `User` submitting the move
+
+    &#34;&#34;&#34;</code></pre>
+</details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
@@ -34,10 +135,6 @@
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="src.server.server" href="server.html">src.server.server</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 </dl>
 </section>
 <section>
@@ -45,6 +142,244 @@
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.server.Command"><code class="flex name class">
+<span>class <span class="ident">Command</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>An instruction packet, received by client from server.</p>
+<p>Contains instructions that trigger state changes in the UI.
+Should always be subclassed, with more specific information made available
+for each type of Command (display_game_over, await_response, )</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique ID for object</dd>
+</dl>
+<h2 id="functions">Functions</h2>
+<p>execute()
+* contains the functions necessary to trigger change in the client</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Command(Snowflake):
+    &#34;&#34;&#34;An instruction packet, received by client from server.
+
+    Contains instructions that trigger state changes in the UI.
+    Should always be subclassed, with more specific information made available
+    for each type of Command (display_game_over, await_response, )
+
+    Attributes:
+        id (int): Unique ID for object
+
+
+    Functions:
+        execute()
+            * contains the functions necessary to trigger change in the client
+
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.server.Snowflake" href="#src.server.Snowflake">Snowflake</a></li>
+<li>abc.ABC</li>
+</ul>
+</dd>
+<dt id="src.server.Connection"><code class="flex name class">
+<span>class <span class="ident">Connection</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Object for management of socket connection</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique ID for object</dd>
+</dl>
+<p>socket (Socket)
+user (User)</p>
+<h2 id="functions">Functions</h2>
+<p>send_data(data)
+# Really necessary?
+send_command(Command)
+# Really necessary?</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Connection(Snowflake):
+    &#34;&#34;&#34;Object for management of socket connection
+
+    Attributes:
+        id (int): Unique ID for object
+        socket (Socket)
+        user (User)
+
+    Functions:
+        send_data(data)        # Really necessary?
+        send_command(Command)  # Really necessary?
+
+
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.server.Snowflake" href="#src.server.Snowflake">Snowflake</a></li>
+<li>abc.ABC</li>
+</ul>
+</dd>
+<dt id="src.server.Game"><code class="flex name class">
+<span>class <span class="ident">Game</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A class for housing game logic and managing the game's internal state.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique ID for object</dd>
+</dl>
+<p>current_state
+move_history
+players_in_game</p>
+<h2 id="functions">Functions</h2>
+<p>get_game_state()
+* return a serializable, file writable, importable save state.
+load_game_state(state_file)
+* restores internal game state from file.
+submit_move(move)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Game(Snowflake):
+    &#34;&#34;&#34;A class for housing game logic and managing the game&#39;s internal state.
+
+    Attributes:
+        id (int): Unique ID for object
+        current_state
+        move_history
+        players_in_game
+
+    Functions:
+        get_game_state()
+            * return a serializable, file writable, importable save state.
+        load_game_state(state_file)
+            * restores internal game state from file.
+        submit_move(move)
+
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.server.Snowflake" href="#src.server.Snowflake">Snowflake</a></li>
+<li>abc.ABC</li>
+</ul>
+</dd>
+<dt id="src.server.Move"><code class="flex name class">
+<span>class <span class="ident">Move</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>An object containing information about the move and the user</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique ID for object</dd>
+<dt><strong><code>move</code></strong> :&ensp;<code>str</code></dt>
+<dd>either "rock", "paper", or "scissors"</dd>
+<dt><strong><code>user</code></strong> :&ensp;<code><a title="src.server.User" href="#src.server.User">User</a></code></dt>
+<dd>the <code><a title="src.server.User" href="#src.server.User">User</a></code> submitting the move</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Move(Snowflake):
+    &#34;&#34;&#34;An object containing information about the move and the user
+
+    Attributes:
+        id (int): Unique ID for object
+        move (str): either &#34;rock&#34;, &#34;paper&#34;, or &#34;scissors&#34;
+        user (User): the `User` submitting the move
+
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.server.Snowflake" href="#src.server.Snowflake">Snowflake</a></li>
+<li>abc.ABC</li>
+</ul>
+</dd>
+<dt id="src.server.Snowflake"><code class="flex name class">
+<span>class <span class="ident">Snowflake</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Base class for all game objects.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique ID for object</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Snowflake(ABC):
+    &#34;&#34;&#34;Base class for all game objects.
+
+    Attributes:
+        id (int): Unique ID for object
+
+
+    &#34;&#34;&#34;
+
+    ...</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="src.server.Command" href="#src.server.Command">Command</a></li>
+<li><a title="src.server.Connection" href="#src.server.Connection">Connection</a></li>
+<li><a title="src.server.Game" href="#src.server.Game">Game</a></li>
+<li><a title="src.server.Move" href="#src.server.Move">Move</a></li>
+<li><a title="src.server.User" href="#src.server.User">User</a></li>
+</ul>
+</dd>
+<dt id="src.server.User"><code class="flex name class">
+<span>class <span class="ident">User</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>An object with basic user information.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique ID for object</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The user's display name</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class User(Snowflake):
+    &#34;&#34;&#34;An object with basic user information.
+
+    Attributes:
+        id (int): Unique ID for object
+        name (str): The user&#39;s display name
+
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.server.Snowflake" href="#src.server.Snowflake">Snowflake</a></li>
+<li>abc.ABC</li>
+</ul>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -62,7 +397,28 @@
 <ul>
 <li><code><a title="src.server.game" href="game.html">src.server.game</a></code></li>
 <li><code><a title="src.server.main" href="main.html">src.server.main</a></code></li>
-<li><code><a title="src.server.server" href="server.html">src.server.server</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.server.Command" href="#src.server.Command">Command</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.server.Connection" href="#src.server.Connection">Connection</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.server.Game" href="#src.server.Game">Game</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.server.Move" href="#src.server.Move">Move</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.server.Snowflake" href="#src.server.Snowflake">Snowflake</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.server.User" href="#src.server.User">User</a></code></h4>
+</li>
 </ul>
 </li>
 </ul>
