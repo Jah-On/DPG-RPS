@@ -2,12 +2,13 @@
 name = "dpg-rps"
 version = "0.1.0"
 description = "Rock, Paper, Sockets!"
-authors = ["cubic-unit <cadenblox@gmail.com>"]
+authors = ["cubic-unit <cadenblox@gmail.com>, Jah-On <>"]
 license = "GPL"
 
 [tool.poetry.dependencies]
 python = "^3.8"
 dearpygui = "^0.6.18"
+
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1.2"
@@ -15,11 +16,13 @@ pytest-cov = "^2.10.1"
 black = "^20.8b1"
 flake8 = "^3.8.4"
 rope = "^0.18.0"
-rich = "^9.2.0"
 PySnooper = "^0.4.2"
+pdoc3 = "^0.9.2"
+doit = "^0.33.1"
 
 [tool.poetry.scripts]
-gui = "src.gui:main"
+gui = "src.client.gui:main"
+build_docs = "util.make_docs:run_pdoc3"
 # TODO: This is non-functional!
 
 [build-system]
