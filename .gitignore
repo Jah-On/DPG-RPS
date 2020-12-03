@@ -133,5 +133,8 @@ dmypy.json
 # sqlite3 database files
 *.db
 
+# VS Code workspace files
+workspace.code-workspace
+
 # doit artifacts
 .doit.db*
