@@ -32,6 +32,8 @@ class Connection(Snowflake):
 
     """
 
+    ...
+
 
 class Game(Snowflake):
     """A class for housing game logic and managing the game's internal state.
@@ -51,6 +53,8 @@ class Game(Snowflake):
 
     """
 
+    ...
+
 
 class User(Snowflake):
     """An object with basic user information.
@@ -60,6 +64,8 @@ class User(Snowflake):
         name (str): The user's display name
 
     """
+
+    ...
 
 
 class __GameState(Snowflake):
@@ -90,6 +96,8 @@ class Command(Snowflake):
 
     """
 
+    ...
+
 
 # // TODO: Implement below list of commands as subclasses.
 
@@ -110,6 +118,8 @@ class Move(Snowflake):
 
     """
 
+    ...
+
 
 class GameState(BaseModel):
     """A complete game state class, indicating the involved users, current game data,
@@ -121,3 +131,6 @@ class GameState(BaseModel):
     players: Optional[Tuple[User]]
     state: str = "Welcome"
     submitted_moves: Optional[Tuple[Tuple[User, Move]]]
+
+    class Config:
+        arbitrary_types_allowed = True

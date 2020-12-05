@@ -5,14 +5,20 @@ from typing import Callable
 from obj import IClientCommander
 
 
-class Client:
+class ConcreteClient:
     class Commands(IClientCommander):
-        @staticmethod
-        def func():
-            ...
+        """Commands that can be issued by the GUI instance.
+
+        These methods must be declared as async methods.
+        These methods cannot take any arguments.
+        These methods must be static methods.
+        """
+
+        def __init__(self, IGUIInterface):
+            self.gui = IGUIInterface
 
         @staticmethod
-        def submit_move():
+        async def submit_move():
             pass
 
         @staticmethod
@@ -25,3 +31,14 @@ class Client:
                 Exception
             """
             pass
+
+        @staticmethod
+        async def _get_game_state():
+            """Client functionality to request game state from the server goes here."""
+            ...
+
+        @staticmethod
+        async def start_game() -> bool:
+            """To Dummy this, I'll be returning a mocked static GameState class."""
+            request = "some mock data"
+            return True

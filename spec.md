@@ -209,3 +209,11 @@ def func(var_name: type) -> bool:
 1. Ready to Start
 1. Awaiting Moves
 1. Game Over
+
+# Flow
+
+1. UI is built.
+1. User clicks Start Game.
+1. Button callback is triggered.
+1. Callback sends async request to the client, requesting that the game be started. When the request is returned, the GUI triggers a "consume game state"
+1. The game state is rebuilt.

@@ -10,7 +10,7 @@ from launcher import launcher
 
 
 def launch_launcher():
-    launcher.main(client.Client)
+    launcher.main(client.ConcreteClient)
 
 
 def cli():
