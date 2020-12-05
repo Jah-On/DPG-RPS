@@ -5,12 +5,12 @@ command line arguments, so the GUI Launcher needs to be loaded. Or, if there ARE
 arguments present, then it can start and/or configure the server.
 """
 # from server import server
-from .client import client
-from .launcher import launcher
+from client import client
+from launcher import launcher
 
 
 def launch_launcher():
-    launcher.main(client)
+    launcher.main(client.Client)
 
 
 def cli():

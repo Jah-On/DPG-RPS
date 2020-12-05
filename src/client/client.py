@@ -1,24 +1,27 @@
+"""Module for contacting the Server and passing Commands and Game State to the GUI.
+"""
+
+from typing import Callable
+from obj import IClientCommander
+
+
 class Client:
-    @staticmethod
-    def listen_for_command(var_name: type) -> bool:
-        """Wait for a Command object from server.
+    class Commands(IClientCommander):
+        @staticmethod
+        def func():
+            ...
 
-        Arguments:
-            var_name (type): [description]
+        @staticmethod
+        def submit_move():
+            pass
 
-        Returns:
-            bool: [description]
+        @staticmethod
+        async def get_game_state_to_target(target: Callable) -> None:
+            """Requests game state from Server and passes it back via parameter function.
 
-        Raises:
-            ExceptionType: [description]
-
-        """
-        ...
-
-    @staticmethod
-    def submit_move():
-        pass
-
-    @staticmethod
-    async def get_game_state():
-        pass
+            Args:
+                target (Callable): A function that takes one argument: the game state.
+            Raises:
+                Exception
+            """
+            pass

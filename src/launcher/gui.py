@@ -1,13 +1,35 @@
 import dearpygui.core as core
 import dearpygui.simple as simple
+from obj import IGUI
+from obj.game_objects import GameState
 
 
 class GUI:
+    class Commands(IGUI):
+        @staticmethod
+        def inject_game_state(state: GameState):
+            core.add_data("__active.state", state)
+
+        @staticmethod
+        def consume_game_state():
+            """This function interprets the game state and builds the GUI accordingly"""
+            state: GameState
+            state = core.get_data("__active.state")
+
+            if state.state == "Welcome":
+                GUI.welcome_screen()
+
     def __init__(self, client):
-        self.client = client
+        # Create a new INSTANCE, of our client, to be consumed by THIS GUI's instance.
+        self.client = client()
+        self.client.get_game_state_to_target(self.Commands.inject_game_state)
+        self.main()
 
     def main(self):
-        ...
+        with simple.window("Main"):
+            core.add_text("Hello World!")
+        core.set_primary_window("Main", True)
+        self.Commands.consume_game_state()
 
     def _consume_game_state(self, state):
         ...
@@ -19,7 +41,7 @@ class GUI:
         pass
 
     def welcome_screen(self):
-        core.add_text("Welcome to DPG-RPS!", parent="Main")
+        core.add_text("Welcome to DPG-RPS This is the Welcome screen!", parent="Main")
 
     def game_screen(self):
         pass
@@ -36,6 +58,5 @@ class GUI:
         )
 
     def start_gui(self):
-        with simple.window("DPG-RPS", menubar=True):
-            ...
-        core.start_dearpygui(primary_window="DPG-RPS")
+        """Simple method for exposing the GUI lift-off command"""
+        core.start_dearpygui()
