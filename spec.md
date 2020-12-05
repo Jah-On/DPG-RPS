@@ -200,3 +200,12 @@ def func(var_name: type) -> bool:
     """
     ...
 ```
+
+# Game States
+
+1. Welcome
+1. Connecting
+1. Connected
+1. Ready to Start
+1. Awaiting Moves
+1. Game Over
