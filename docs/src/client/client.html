@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>src.client API documentation</title>
+<title>src.client.client API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,24 +19,153 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.client</code></h1>
+<h1 class="title">Module <code>src.client.client</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Client:
+    @staticmethod
+    def listen_for_command(var_name: type) -&gt; bool:
+        &#34;&#34;&#34;Wait for a Command object from server.
+
+        Arguments:
+            var_name (type): [description]
+
+        Returns:
+            bool: [description]
+
+        Raises:
+            ExceptionType: [description]
+
+        &#34;&#34;&#34;
+        ...
+
+    @staticmethod
+    def submit_move():
+        pass
+
+    @staticmethod
+    async def get_game_state():
+        pass</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt><code class="name"><a title="src.client.client" href="client.html">src.client.client</a></code></dt>
+<dt id="src.client.client.Client"><code class="flex name class">
+<span>class <span class="ident">Client</span></span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Client:
+    @staticmethod
+    def listen_for_command(var_name: type) -&gt; bool:
+        &#34;&#34;&#34;Wait for a Command object from server.
+
+        Arguments:
+            var_name (type): [description]
+
+        Returns:
+            bool: [description]
+
+        Raises:
+            ExceptionType: [description]
+
+        &#34;&#34;&#34;
+        ...
+
+    @staticmethod
+    def submit_move():
+        pass
+
+    @staticmethod
+    async def get_game_state():
+        pass</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="src.client.client.Client.get_game_state"><code class="name flex">
+<span>async def <span class="ident">get_game_state</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+async def get_game_state():
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.client.client.Client.listen_for_command"><code class="name flex">
+<span>def <span class="ident">listen_for_command</span></span>(<span>var_name: type) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Wait for a Command object from server.</p>
+<h2 id="arguments">Arguments</h2>
+<p>var_name (type): [description]</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>[description]</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ExceptionType</code></dt>
+<dd>[description]</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def listen_for_command(var_name: type) -&gt; bool:
+    &#34;&#34;&#34;Wait for a Command object from server.
+
+    Arguments:
+        var_name (type): [description]
+
+    Returns:
+        bool: [description]
+
+    Raises:
+        ExceptionType: [description]
+
+    &#34;&#34;&#34;
+    ...</code></pre>
+</details>
+</dd>
+<dt id="src.client.client.Client.submit_move"><code class="name flex">
+<span>def <span class="ident">submit_move</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def submit_move():
+    pass</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -47,12 +176,19 @@
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src" href="../index.html">src</a></code></li>
+<li><code><a title="src.client" href="index.html">src.client</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
-<li><code><a title="src.client.client" href="client.html">src.client.client</a></code></li>
+<li>
+<h4><code><a title="src.client.client.Client" href="#src.client.client.Client">Client</a></code></h4>
+<ul class="">
+<li><code><a title="src.client.client.Client.get_game_state" href="#src.client.client.Client.get_game_state">get_game_state</a></code></li>
+<li><code><a title="src.client.client.Client.listen_for_command" href="#src.client.client.Client.listen_for_command">listen_for_command</a></code></li>
+<li><code><a title="src.client.client.Client.submit_move" href="#src.client.client.Client.submit_move">submit_move</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
