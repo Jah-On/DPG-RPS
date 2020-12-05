@@ -135,3 +135,6 @@ dmypy.json
 
 # doit artifacts
 .doit.db*
+
+# VS Code workspace files
+workspace.code-workspace

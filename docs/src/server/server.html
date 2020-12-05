@@ -26,19 +26,55 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python"># import socket
-# import netifaces as ni
+<pre><code class="python">from . import Move, User, Game, Command, Connection
+from typing import List, Union
 
-# s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# interfaces = ni.interfaces()
-# for i in range(0, (len(interfaces))):
-#     try:
-#         ip = ni.ifaddresses(interfaces[i])[ni.AF_INET][0][&#39;addr&#39;]
-#     except:
-#         pass
+def authenticate(user: str, pw: str) -&gt; User:
+    return User
 
-# s1.bind((ip, 4321))</code></pre>
+
+def submit_move(move: Move, user: User) -&gt; bool:
+    &#34;&#34;&#34;API function to submit a move to the server.
+
+    Args:
+        move (Move): Either &#34;Rock&#34;, &#34;Paper&#34;, or &#34;Scissors&#34;
+        user (User): The User object of the sender
+
+    Returns:
+        bool: True if successful, False if otherwise.
+
+    Raises:
+        InvalidMoveException: Error if submitted move is invalid.
+
+    &#34;&#34;&#34;
+
+    ...
+
+
+def register_new_user(username: str, pw: str) -&gt; User:
+    &#34;&#34;&#34;API function to submit a new user registration.
+
+    Args:
+        username (str): No special characters, no whitespace, 20 char limit.
+        pw (str): 8 char minimum.
+
+    Returns:
+        bool: True if successful,
+    &#34;&#34;&#34;
+    return User
+
+
+def request_connection() -&gt; Union[Connection, bool]:
+    ...
+
+
+def request_available_players(user: User) -&gt; bool:
+    return False
+
+
+def request_connection_with_player(user: User) -&gt; Connection:
+    return Connection</code></pre>
 </details>
 </section>
 <section>
@@ -46,6 +82,139 @@
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.server.server.authenticate"><code class="name flex">
+<span>def <span class="ident">authenticate</span></span>(<span>user: str, pw: str) ‑> <a title="src.server.User" href="index.html#src.server.User">User</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def authenticate(user: str, pw: str) -&gt; User:
+    return User</code></pre>
+</details>
+</dd>
+<dt id="src.server.server.register_new_user"><code class="name flex">
+<span>def <span class="ident">register_new_user</span></span>(<span>username: str, pw: str) ‑> <a title="src.server.User" href="index.html#src.server.User">User</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>API function to submit a new user registration.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>username</code></strong> :&ensp;<code>str</code></dt>
+<dd>No special characters, no whitespace, 20 char limit.</dd>
+<dt><strong><code>pw</code></strong> :&ensp;<code>str</code></dt>
+<dd>8 char minimum.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if successful,</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def register_new_user(username: str, pw: str) -&gt; User:
+    &#34;&#34;&#34;API function to submit a new user registration.
+
+    Args:
+        username (str): No special characters, no whitespace, 20 char limit.
+        pw (str): 8 char minimum.
+
+    Returns:
+        bool: True if successful,
+    &#34;&#34;&#34;
+    return User</code></pre>
+</details>
+</dd>
+<dt id="src.server.server.request_available_players"><code class="name flex">
+<span>def <span class="ident">request_available_players</span></span>(<span>user: <a title="src.server.User" href="index.html#src.server.User">User</a>) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def request_available_players(user: User) -&gt; bool:
+    return False</code></pre>
+</details>
+</dd>
+<dt id="src.server.server.request_connection"><code class="name flex">
+<span>def <span class="ident">request_connection</span></span>(<span>) ‑> Union[<a title="src.server.Connection" href="index.html#src.server.Connection">Connection</a>, bool]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def request_connection() -&gt; Union[Connection, bool]:
+    ...</code></pre>
+</details>
+</dd>
+<dt id="src.server.server.request_connection_with_player"><code class="name flex">
+<span>def <span class="ident">request_connection_with_player</span></span>(<span>user: <a title="src.server.User" href="index.html#src.server.User">User</a>) ‑> <a title="src.server.Connection" href="index.html#src.server.Connection">Connection</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def request_connection_with_player(user: User) -&gt; Connection:
+    return Connection</code></pre>
+</details>
+</dd>
+<dt id="src.server.server.submit_move"><code class="name flex">
+<span>def <span class="ident">submit_move</span></span>(<span>move: <a title="src.server.Move" href="index.html#src.server.Move">Move</a>, user: <a title="src.server.User" href="index.html#src.server.User">User</a>) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>API function to submit a move to the server.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>move</code></strong> :&ensp;<code>Move</code></dt>
+<dd>Either "Rock", "Paper", or "Scissors"</dd>
+<dt><strong><code>user</code></strong> :&ensp;<code>User</code></dt>
+<dd>The User object of the sender</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if successful, False if otherwise.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>InvalidMoveException</code></dt>
+<dd>Error if submitted move is invalid.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def submit_move(move: Move, user: User) -&gt; bool:
+    &#34;&#34;&#34;API function to submit a move to the server.
+
+    Args:
+        move (Move): Either &#34;Rock&#34;, &#34;Paper&#34;, or &#34;Scissors&#34;
+        user (User): The User object of the sender
+
+    Returns:
+        bool: True if successful, False if otherwise.
+
+    Raises:
+        InvalidMoveException: Error if submitted move is invalid.
+
+    &#34;&#34;&#34;
+
+    ...</code></pre>
+</details>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -59,6 +228,16 @@
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="src.server" href="index.html">src.server</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.server.server.authenticate" href="#src.server.server.authenticate">authenticate</a></code></li>
+<li><code><a title="src.server.server.register_new_user" href="#src.server.server.register_new_user">register_new_user</a></code></li>
+<li><code><a title="src.server.server.request_available_players" href="#src.server.server.request_available_players">request_available_players</a></code></li>
+<li><code><a title="src.server.server.request_connection" href="#src.server.server.request_connection">request_connection</a></code></li>
+<li><code><a title="src.server.server.request_connection_with_player" href="#src.server.server.request_connection_with_player">request_connection_with_player</a></code></li>
+<li><code><a title="src.server.server.submit_move" href="#src.server.server.submit_move">submit_move</a></code></li>
 </ul>
 </li>
 </ul>
