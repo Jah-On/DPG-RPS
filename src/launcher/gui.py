@@ -7,8 +7,13 @@ class GUI:
         self.client = client
 
     def main(self):
-        with simple.window("Main"):
-            core.add_text("Hello!")
+        ...
+
+    def _consume_game_state(self, state):
+        ...
+
+    def render_loop(self):
+        ...
 
     def clear_screen(self):
         pass

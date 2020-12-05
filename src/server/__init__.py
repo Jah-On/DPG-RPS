@@ -1,4 +1,6 @@
+from typing import Any, List, Optional, Tuple, Type
 from abc import ABC
+from pydantic import BaseModel, Field
 
 
 class Snowflake(ABC):
@@ -25,24 +27,6 @@ class Connection(Snowflake):
         send_data(data)        # Really necessary?
         send_command(Command)  # Really necessary?
 
-
-    """
-
-
-class Command(Snowflake):
-    """An instruction packet, received by client from server.
-
-    Contains instructions that trigger state changes in the UI.
-    Should always be subclassed, with more specific information made available
-    for each type of Command (display_game_over, await_response, )
-
-    Attributes:
-        id (int): Unique ID for object
-
-
-    Functions:
-        execute()
-            * contains the functions necessary to trigger change in the client
 
     """
 
@@ -85,6 +69,35 @@ class User(Snowflake):
     """
 
 
+class __GameState(Snowflake):
+    """
+    Deprecated class. See new GameState
+    """
+
+    game_id: int
+    player_list: Tuple[User]
+    pending_move: Any  # a description of what the game is CURRENTLY waiting on
+    history: Any
+
+
+class Command(Snowflake):
+    """An instruction packet, received by client from server.
+
+    Contains instructions that trigger state changes in the UI.
+    Should always be subclassed, with more specific information made available
+    for each type of Command (display_game_over, await_response, )
+
+    Attributes:
+        id (int): Unique ID for object
+
+
+    Functions:
+        execute()
+            * contains the functions necessary to trigger change in the client
+
+    """
+
+
 class Move(Snowflake):
     """An object containing information about the move and the user
 
@@ -94,3 +107,14 @@ class Move(Snowflake):
         user (User): the `User` submitting the move
 
     """
+
+
+class GameState(BaseModel):
+    """A complete game state class, indicating the involved users, current game data,
+    current game status (pending moves, pending game start, etc), and any other
+    information needed to process or rebuild the game's current state, across modules.
+    """
+
+    game_id: Optional[int] = Field(...)
+    players: Optional[Tuple[User]]
+    state: str
