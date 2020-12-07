@@ -56,7 +56,7 @@ class Game(Snowflake):
     ...
 
 
-class User(Snowflake):
+class User(BaseModel):
     """An object with basic user information.
 
     Attributes:
@@ -64,6 +64,10 @@ class User(Snowflake):
         name (str): The user's display name
 
     """
+
+    id: int
+    username: str
+    password: str
 
     ...
 

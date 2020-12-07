@@ -51,6 +51,11 @@ class IClientCommander(ABC):
         """
         raise NotImplementedError
 
+    @staticmethod
+    @abstractmethod
+    def request_game_state(sender, data):
+        raise NotImplementedError
+
 
 class IGUI(ABC):
     """Interface for the GUI commands that the Client needs access to."""
