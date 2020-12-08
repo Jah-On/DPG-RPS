@@ -1,29 +1,10 @@
-"""Game objects are """
+"""
+Game objects inherit Pydantic's BaseModel class to imbue them with 
+some useful helper fuctions for sending them over API requests."""
 
-from typing import Any, Dict, List, Optional, Tuple, Type
+from typing import Any, Dict, List, Match, Optional, Tuple, Type
 from abc import ABC
 from pydantic import BaseModel, Field
-
-
-class Game:
-    """A class for housing game logic and managing the game's internal state.
-
-    Attributes:
-        id (int): Unique ID for object
-        current_state
-        move_history
-        players_in_game
-
-    Functions:
-        get_game_state()
-            * return a serializable, file writable, importable save state.
-        load_game_state(state_file)
-            * restores internal game state from file.
-        submit_move(move)
-
-    """
-
-    ...
 
 
 class User(BaseModel):
@@ -37,18 +18,6 @@ class User(BaseModel):
 
     id: int
     username: str
-    password: str
-
-    ...
-
-
-# // TODO: Implement below list of commands as subclasses.
-
-# Command List:
-# * prompt_move
-# * display_result
-# * wait_for_result
-# * prompt_new_game
 
 
 class Move(BaseModel):
@@ -63,13 +32,27 @@ class Move(BaseModel):
 
     parent_uid: int
     move: str
-    user: User
+    # user: User
+
+
+class State(BaseModel):
+    """Base implementation of a State"""
+
+    name: str
 
 
 class States(BaseModel):
     """A simple dataclass for State definitions"""
 
-    welcome: str = "Welcome"
+    welcome: State = State(name="Welcome")
+    req_lobby: State = State(name="Requesting Lobby")
+    in_lobby: State = State(name="In Lobby")
+    match_request: State = State(name="Requesting Match")
+    matched: State = State(name="Matched")
+    rejected: State = State(name="Rejected")
+    ready: State = State(name="Players Ready?")
+    get_move: State = State(name="Submit Moves")
+    game_over: State = State(name="Game Over")
 
 
 class GameState(BaseModel):
@@ -78,13 +61,13 @@ class GameState(BaseModel):
     information needed to process or rebuild the game's current state, across modules.
     """
 
-    game_id: Optional[int]
-    state: States = States(state="Welcome")
-    players: Optional[Tuple[User]]
-    ready: Optional[Tuple[User]]
-    current_moves: Optional[Dict[str, Move]]
-    moves_history: Optional[Tuple[Tuple[User, Move]]]
-    winner: Optional[User]
+    game_id: Optional[int] = None
+    state: State = States().welcome
+    players: Optional[Tuple[User]] = None
+    ready: Optional[Tuple[User]] = None
+    current_moves: Optional[Dict[str, Move]] = None
+    moves_history: Optional[Tuple[Tuple[Any, Move]]] = None
+    winner: Optional[Any] = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -129,3 +112,105 @@ class Command(BaseModel):
     uid: int
     command: str
     state: GameState
+
+
+class Mocks:
+    class utils:
+        @staticmethod
+        def make_mock_GameState(mock):
+            return GameState(**mock)
+
+        @staticmethod
+        def make_mock_User(mock):
+            return User(**mock)
+
+    class mocks:
+        users = {
+            "user1": {"id": "51", "username": "one o' ya"},
+            "user2": {"id": "420", "username": "another 'ya"},
+            "me": {"id": 7734, "username": "cbxm"},
+        }
+
+        states = {
+            "welcome": {
+                "game_id": 0,
+                "state": States().welcome,
+                "players": None,
+                "ready": None,
+                "current_moves": None,
+                "moves_history": None,
+                "winner": None,
+            },
+            "req_lobby": {
+                "game_id": 1,
+                "state": States().req_lobby,
+                "players": None,
+                "ready": None,
+                "current_moves": None,
+                "moves_history": None,
+                "winner": None,
+            },
+            "in_lobby": {
+                "game_id": 2,
+                "state": States().in_lobby,
+                "players": "",
+                "ready": "",
+                "current_moves": "",
+                "moves_history": "",
+                "winner": "",
+            },
+            "match_request": {
+                "game_id": 3,
+                "state": States().match_request,
+                "players": "",
+                "ready": "",
+                "current_moves": "",
+                "moves_history": "",
+                "winner": "",
+            },
+            "matched": {
+                "game_id": 4,
+                "state": States().matched,
+                "players": "",
+                "ready": "",
+                "current_moves": "",
+                "moves_history": "",
+                "winner": "",
+            },
+            "rejected": {
+                "game_id": 5,
+                "state": States().rejected,
+                "players": "",
+                "ready": "",
+                "current_moves": "",
+                "moves_history": "",
+                "winner": "",
+            },
+            "ready": {
+                "game_id": 6,
+                "state": States().ready,
+                "players": "",
+                "ready": "",
+                "current_moves": "",
+                "moves_history": "",
+                "winner": "",
+            },
+            "get_move": {
+                "game_id": 7,
+                "state": States().get_move,
+                "players": "",
+                "ready": "",
+                "current_moves": "",
+                "moves_history": "",
+                "winner": "",
+            },
+            "game_over": {
+                "game_id": 8,
+                "state": States().game_over,
+                "players": "",
+                "ready": "",
+                "current_moves": "",
+                "moves_history": "",
+                "winner": "",
+            },
+        }

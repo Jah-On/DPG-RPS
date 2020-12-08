@@ -511,7 +511,7 @@ colorama = "*"
 name = "prompt-toolkit"
 version = "3.0.8"
 description = "Library for building powerful interactive command lines in Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6.1"
 
@@ -857,14 +857,14 @@ standard = ["websockets (>=8.0.0,<9.0.0)", "watchgod (>=0.6,<0.7)", "python-dote
 name = "wcwidth"
 version = "0.2.5"
 description = "Measures the displayed width of unicode strings in a terminal"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9b670c4e11332e95994ad71ecab4b7d2914ac21883fbc4b35b560ac7e796ca35"
+content-hash = "65f7c5e46c22051931080f9de48404804fe70eddfb0efcdabdb7de72f06be7e1"
 
 [metadata.files]
 appdirs = [

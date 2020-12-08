@@ -13,6 +13,8 @@ uvicorn = "^0.12.3"
 pydantic = "^1.7.3"
 requests = "^2.25.0"
 python-dotenv = "^0.15.0"
+click = "^7.1.2"
+prompt-toolkit = "^3.0.8"
 
 
 [tool.poetry.dev-dependencies]

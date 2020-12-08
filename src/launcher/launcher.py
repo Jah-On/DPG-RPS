@@ -1,4 +1,4 @@
-from .gui import GUI
+from .tui import TUI
 from client.client import RPSBeacon
 
 
@@ -7,7 +7,7 @@ def main():
     beacon = RPSBeacon()
 
     # Construct our GUI, injecting the beacon.
-    g = GUI(beacon)
+    g = TUI(beacon)
 
     # All the magic happens on init, so just start the GUI.
-    g.start_gui()
+    # g.main()
