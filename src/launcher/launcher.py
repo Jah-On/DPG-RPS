@@ -2,9 +2,12 @@ from .gui import GUI
 from client.client import RPSBeacon
 
 
-async def main():
-    # Construct our GUI, attaching it to an ICommander object.
-    g = await GUI(RPSBeacon)
+def main():
+    # Light the beacon
+    beacon = RPSBeacon()
 
-    # Everything happens in the constructor, so just start the GUI.
+    # Construct our GUI, injecting the beacon.
+    g = GUI(beacon)
+
+    # All the magic happens on init, so just start the GUI.
     g.start_gui()

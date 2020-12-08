@@ -1,83 +1,19 @@
 """Module for contacting the Server and passing Commands and Game State to the GUI."""
 
 from abc import abstractmethod
-from typing import Any, Coroutine
+from typing import Any, Callable, Coroutine, Dict
 import json
 from requests import Response, post
 from pydantic import BaseModel
 
-# from obj.game_objects import User
-# from obj import IClientCommander
-
-basic_data = {
-    "id": 0,
-    "request": "okay",
-}
-
-'''
-class ConcreteClient:
-    class Commands(IClientCommander):
-        """Commands that can be issued by the GUI instance.
-
-        These methods must be declared as async methods.
-        These methods cannot take any arguments.
-        These methods must be static methods.
-        """
-
-        def __init__(self):
-            ...
-
-        @staticmethod
-        async def submit_generic(scope, receive, send):
-            assert scope["type"] == "http"
-            request = Request(scope, receive)
-            content = f"{request.method} {request.url.path}"
-            response = Response(content, media_type="text/plain")
-            await response(scope, receive, send)
-
-        @staticmethod
-        async def get_game_state_to_target(target: Callable) -> None:
-            """Requests game state from Server and passes it back via parameter function.
-
-            Args:
-                target (Callable): A function that takes one argument: the game state.
-            Raises:
-                Exception
-            """
-            pass
-
-        @staticmethod
-        async def _get_game_state():
-            """Client functionality to request game state from the server goes here."""
-            ...
-
-        @staticmethod
-        async def start_game() -> bool:
-            """To Dummy this, I'll be returning a mocked static GameState class."""
-            request = "some mock data"
-            return True
-'''
-
-
-class User(BaseModel):
-    """An object with basic user information.
-
-    Attributes:
-        id (int): Unique ID for object
-        name (str): The user's display name
-
-    """
-
-    id: int
-    username: str
-    password: str
+from obj.game_objects import User, GameState
 
 
 class RPSBeacon:
     def __init__(self, basepoint: str = "http://127.0.0.1:8000"):
         self.basepoint = basepoint
 
-    async def get(self, endpoint: str = "/", data: dict = None) -> str:
+    async def send(self, endpoint: str = "/", data: dict = None) -> str:
         """Most basic of interfaces for sending a request to the server.
 
         Args:
@@ -93,26 +29,70 @@ class RPSBeacon:
         Returns:
             str: A str object, theoretically as formed JSON, convertable to dict.
         """
+
+        # From our basepoint, construct a fully-qualified endpoint URL
         url = self.basepoint + endpoint
+
+        # Get the data in literal JSON form.
         jdata = json.dumps(data)
 
+        # Use `requests` native post function, and assign the response
         response = post(url=url, data=jdata)
+
+        # Then debug the response...
+        print(f"DEBUG : {response = }")
+
+        # ...and return the content of it.
         return response.text
 
-    async def _get_game_state(self, user: User) -> Coroutine[Any, Any, str]:
-        response = self.get("/get_game_state", user.dict())
+    async def _request_game_state(self, user: User) -> str:
+        """Internal function to assist with a game state request"""
+        response = await self.send("/get_game_state", user.dict())
         return response
 
-    async def get_game_state(self, sender, data):
-        print("enter beacon.get_game_state")
+    async def _mock_request(self, user: User) -> GameState:
+        """A stand-in for an IO bound async request"""
+        print("Enter RPSBeacon._mock_request")
+        mock_state = GameState(state="It changed!")
+        print(f"DEBUG : {mock_state.state = }")
+        return mock_state
+
+    async def get_game_state(
+        self,
+        sender: str,
+        data: dict,
+    ) -> None:
+        """Beacon Signal to request game state from Server.
+
+        Args:
+            sender: The DPG element that called the function
+            data: A dictionary containing a User and a Callable to send data back to DPG
+        """
+        # DEBUG
+        print(f"DEBUG | Entering func: `beacon.get_game_state`")
+        print(f"DEBUG | {sender = }")
+        print(f"DEBUG | {data = }")
+
+        # Extract user from data
         user = data["user"]
+        print(f"DEBUG | {repr(user) = }")
+
+        # Extract the function used to send data back to GUI
         injector = data["injector"]
-        state = self._get_game_state(user)
+        print(f"DEBUG | {repr(injector) = }")
+
+        # Await the game state request
+        # Using a dummy request here,
+        state = await self._mock_request(user)
+
+        # And send it to the GUI.
         injector(state)
+
+        return None
 
 
 def main():
-    ...
+    pass
 
 
 if __name__ == "__main__":

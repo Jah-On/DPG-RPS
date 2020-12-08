@@ -16,34 +16,55 @@ import pretty_errors
 from launcher import launcher
 
 
-async def launch_launcher():
-    await launcher.main()
-
-
-def cli():
-    """Server init commands go here"""
-    ...
+def launch_launcher():
+    launcher.main()
 
 
 if __name__ == "__main__":
-    asyncio.run(launch_launcher())
+    launch_launcher()
 
 
 """
-Submit & Get:
+Okay.
 
-One Command. 
+Submit an API call & load the response into DPG's data register.
 
-Submit a request to the server. Display the information it returns.
+One Button. One Command. Who knows how many callbacks.
 
-Main calls the launcher.
-    The Launcher makes a Client, and a GUI.
-    The GUI creates a window, a button, and a line of text.
-        The button will submit a request to the server.
-        When the server responds, the GUI will add a string to the window.
-    The Client will expose one command: Commands.submit_generic().
-        When the request is received, then a new method will be triggered
-            This will print the string to the window.
-        The tricky bit is: how does the client pass information back to the GUI?
+The RPSBeacon class sits in as a Commander object in this scenario, and
+it serves as the communication layer between GUI and the Server.
+
+Because the Server is using FastAPI, the communications are request-and-response
+based. The Client submits information to the Server, the Server will do calculations
+about the game state, and then will return the updated game state, with a set of
+instructions about what to do next.
+
+In essence, the Server will always provide enough information about the game state for
+any client to be able to rebuild it from scratch. The GUI only needs an instance of the
+GameState class in order to be in-sync with the Server and every other Client.
+
+But because these requests may take a while to return (if you've submitted your move,
+but your opponent has not yet, for example), so I want to run them asynchronously,
+and then trigger the GUI to refresh once the response is processed.
+
+In this way, the GUI essentially become a "state consuming machine". There is no game
+logic defined in the GUI.
+
+So:
+    Main.py calls the Launcher.
+        Launcher makes an RPSBeacon, passing it to the GUI, then starts the GUI.
+        The GUI loads the RPSBeacon into the data store.
+            Then it creates a window, line of text, and a button
+            The button will run a callback to request the game data.
+                This travels through:
+                    GUI.commands.request_game_data()
+                    core.run_async_function()
+                        RPSBeacon.get_game_state()
+                        RPSBeacon._mock_request()
+                and finally be stored by RPSBeacon via GUI.inject_game_state().
+
+            When the server responds, the GUI will add a string to the window that says
+            "It changed!" instead of the default "fake"
+
 
 """

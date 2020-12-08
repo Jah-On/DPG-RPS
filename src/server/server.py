@@ -1,49 +1,44 @@
-from . import Move, User, Game, Command, Connection
-from typing import List, Union
+from time import sleep
+from typing import Optional
+from pydantic import BaseModel
+from fastapi import FastAPI
+from pydantic.errors import StrError
+
+from obj.game_objects import User
 
 
-def authenticate(user: str, pw: str) -> User:
-    return User
+class BaseRequest(BaseModel):
+    id: int
+    request: str
 
 
-def submit_move(move: Move, user: User) -> bool:
-    """API function to submit a move to the server.
-
-    Args:
-        move (Move): Either "Rock", "Paper", or "Scissors"
-        user (User): The User object of the sender
-
-    Returns:
-        bool: True if successful, False if otherwise.
-
-    Raises:
-        InvalidMoveException: Error if submitted move is invalid.
-
-    """
-
+class StateRequest(BaseModel):
     ...
 
 
-def register_new_user(username: str, pw: str) -> User:
-    """API function to submit a new user registration.
-
-    Args:
-        username (str): No special characters, no whitespace, 20 char limit.
-        pw (str): 8 char minimum.
-
-    Returns:
-        bool: True if successful,
-    """
-    return User
+class GameState(BaseModel):
+    state: str
 
 
-def request_connection() -> Union[Connection, bool]:
-    ...
+app = FastAPI()
 
 
-def request_available_players(user: User) -> bool:
-    return False
+@app.post("/")
+async def root():
+    return "Hello World!"
 
 
-def request_connection_with_player(user: User) -> Connection:
-    return Connection
+@app.post("/generic")
+async def receive_generic(request: BaseRequest):
+    print(request.id, request.request)
+    request.request = "Not anymore!"
+    return request
+
+
+@app.post("/get_game_state")
+async def get_game_state(user: User) -> GameState:
+    print("beginning wait...")
+    sleep(10)
+    print("done waiting, returning string!")
+    gs = GameState(state="Hey smooth operator")
+    return gs
