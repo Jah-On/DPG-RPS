@@ -29,6 +29,7 @@ and then trigger the GUI to refresh once the response is processed.
 In this way, the GUI essentially become a "state consuming machine". There is no game
 logic defined in the GUI.
 
+```
 So:
     Main.py calls the Launcher.
         Launcher makes an RPSBeacon, passing it to the GUI, then starts the GUI.
@@ -44,7 +45,7 @@ So:
 
             When the server responds, the GUI will add a string to the window that says
             "It changed!" instead of the default "fake"
-
+```
 See Install and Run sections below.
 
 
