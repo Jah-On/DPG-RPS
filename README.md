@@ -63,5 +63,8 @@ See Install and Run sections below.
 1. `git checkout help/async`
 1. `poetry install`
 
-### Run
+### Start Server
+1. `poetry run doit start_server
+
+### Run Client
 1. `poetry run python src/main.py`

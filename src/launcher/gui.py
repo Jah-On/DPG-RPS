@@ -1,4 +1,3 @@
-# DEBUG
 from typing import Callable
 import dearpygui.core as core
 import dearpygui.simple as simple
@@ -17,7 +16,7 @@ class GUI:
         core.add_data("beacon", self.beacon)
 
         # Generate some fake data to use in the application.
-        fake_state = {"state": "fake"}
+        fake_state = GameState(state="Matched")
         core.add_data("__active_state", fake_state)
         user = User(id=7734, username="cbxm", password="passwordy")
         core.add_data("user", user)
@@ -63,14 +62,31 @@ class GUI:
         print(f"DEBUG | Entering func: `GUI.Commands.consume_game_state`")
 
         # Get game state from data store
-        game_state = core.get_data("__active_state")
+        gs = core.get_data("__active_state")
+
+        state_to_function_bindings = {
+            "Welcome": GUI.welcome_screen,
+            "Requesting Lobby": GUI.welcome_screen,
+            "Select Opponent": GUI.welcome_screen,
+            "Sending Request to Opponent": GUI.welcome_screen,
+            "Matched": GUI.welcome_screen,
+            "Request Rejected": GUI.welcome_screen,
+            "Requesting 'Ready' Status": GUI.welcome_screen,
+            "Waiting for Opponent's Ready": GUI.welcome_screen,
+            "Requesting Move from Players": GUI.welcome_screen,
+            "Waiting for Opponent's Move": GUI.welcome_screen,
+            "Game Over": GUI.welcome_screen,
+        }
+
+        # Here's the broken switch statement mentioned by the commit.
+        # exec(state_to_function_bindings[gs["state"]])
 
         # Verify the information is there
-        print(f"DEBUG | {game_state['state'] = }")
+        print(f"DEBUG | {gs['state'] = }")
 
         # And add some of that information to the GUI, to prove the concept.
-        core.add_text(game_state["state"], parent="Main")
-        core.add_text(f"{game_state['state'] = }", parent="Main")
+        core.add_text(gs["state"], parent="Main")
+        core.add_text(f"{gs['state'] = }", parent="Main")
         core.add_text("Okay, so I consumed the game state.", parent="Main")
         core.add_text(
             f"But the state needs to be something other than 'fake'", parent="Main"
@@ -99,7 +115,7 @@ class GUI:
                 # Get our dummy User instance, because the API requires a User for auth.
                 user = core.get_data("user")
 
-                # Construct a data dictionary to pass the User and a Callable with
+                # Construct data dict to pass the User and Callable to async func
                 data = {"user": user, "injector": GUI.inject_game_state}
 
                 # This is where it's broken.
@@ -127,10 +143,14 @@ class GUI:
             callback=self.commands.request_game_state,
             callback_data="mock data" + "moremockdata",
         )
-        # self.Commands.consume_game_state(sender=None, data=None)
 
-    def _consume_game_state(self, state):
-        ...
+    @staticmethod
+    def welcome_screen():
+        core.add_text("It's-a me: the welcome screen!")
+
+    @staticmethod
+    def requesting_lobby():
+        core.add_text("And welcome to the Lobby for the Lobby!")
 
     def start_gui(self):
         """Simple method to set the primary window and execute lift-off"""

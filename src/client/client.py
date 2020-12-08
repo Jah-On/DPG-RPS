@@ -53,7 +53,7 @@ class RPSBeacon:
     async def _mock_request(self, user: User) -> GameState:
         """A stand-in for an IO bound async request"""
         print("Enter RPSBeacon._mock_request")
-        mock_state = GameState(state="It changed!")
+        mock_state = GameState(state="Requesting Lobby")
         print(f"DEBUG : {mock_state.state = }")
         return mock_state
 
