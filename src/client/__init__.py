@@ -6,12 +6,13 @@ import asyncio
 import json
 from requests import Response, post
 from pydantic import BaseModel
-from obj import User, GameState
+from obj import User, GameState, Mocks
 
 
 class RPSBeacon:
     # The IP Address of the server hosting our API.
     basepoint: str = "http://127.0.0.1:8000"
+    this_user: User = Mocks.make_user("user2")
 
     @staticmethod
     def send(endpoint: str = "/", data: dict = None) -> str:
@@ -73,6 +74,9 @@ class RPSBeacon:
 
         # Extract user and state injector from `data`
         user = data["user"]
+
+        # But right now, we're mocking the user, so let's just
+
         injector = data["__injector"]
 
         # Do our real job, which is to send a request to the server, and get a response

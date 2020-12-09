@@ -18,7 +18,7 @@ async def root():
 @app.post("/get_game_state")
 async def get_game_state(user: User) -> GameState:
     print("beginning wait...")
-    sleep(10)
+    sleep(2)
     print("done waiting, returning string!")
     gs = Mocks.make_gs("in_lobby")
     return gs

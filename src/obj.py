@@ -213,4 +213,4 @@ class Mocks:
 
     @staticmethod
     def make_user(name: str = "me") -> User:
-        return User(**Mocks.states[name])
+        return User(**Mocks.users[name])
