@@ -29,11 +29,11 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.styles import Style
 from prompt_toolkit.widgets import Frame
 
-from client.client import RPSBeacon
-from obj.objects import GameState, User, States
-from obj.objects import Mocks
+from client import RPSBeacon
+from obj import GameState, User, States
+from obj import Mocks
 
-m_user = Mocks.utils.make_mock_User(Mocks.users["user1"])
+m_user = Mocks.make_user("user1")
 
 
 # 1. The layout

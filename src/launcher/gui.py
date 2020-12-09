@@ -2,8 +2,8 @@ from typing import Callable
 
 import dearpygui.core as core
 import dearpygui.simple as simple
-from client.client import RPSBeacon
-from obj.objects import GameState, Mocks, User
+from client import RPSBeacon
+from obj import GameState, Mocks, User
 
 
 class GUI:

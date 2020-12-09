@@ -13,7 +13,7 @@ import pretty_errors  # Pretty tracebacks, no config necessary
 # # This app's resources
 # from server import server
 # from client import client
-from launcher import launcher
+import launcher
 
 
 def launch_launcher():
