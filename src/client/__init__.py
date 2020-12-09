@@ -61,11 +61,11 @@ class RPSBeacon:
 
     @staticmethod
     def get_game_state(sender: str, data: dict) -> None:
-        """Beacon Signal to request game state from Server.
+        """Beacon signal to request game state from Server.
 
         Args:
-            sender: The DPG element that called the function
-            data: A dictionary containing a User and a Callable to send data back to DPG
+            sender (str): The DPG element that called the function
+            data (dict): A dictionary containing a User and an Injector Callable
         """
         # DEBUG
         print(f"DEBUG | Entering func: `beacon.get_game_state`")

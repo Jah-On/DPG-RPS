@@ -22,13 +22,9 @@ class GUI:
         user = User(id=7734, username="cbxm", password="passwordy")
         core.add_data("user", user)
 
-        # Stash the beacon in the data store, also.
-        # This allows isolated callback functions to access this, without needing to
-        # weave a `Callable` through the callback system.
-        core.add_data("beacon", self.beacon)
-
         # Dynamically generate static methods to be used as callbacks
-        self.generate_commands()
+        # This grants our Beacon instance a .commands namespace.
+        self.grant_cmds()
 
         # Create the welcome screen
         self.main()
@@ -65,51 +61,32 @@ class GUI:
         # Get game state from data store
         gs = core.get_data("__active_state")
 
-        # state_to_function_bindings = {
-        #     "Welcome": GUI.welcome_screen,
-        #     "Requesting Lobby": GUI.welcome_screen,
-        #     "Select Opponent": GUI.welcome_screen,
-        #     "Sending Request to Opponent": GUI.welcome_screen,
-        #     "Matched": GUI.welcome_screen,
-        #     "Request Rejected": GUI.welcome_screen,
-        #     "Requesting 'Ready' Status": GUI.welcome_screen,
-        #     "Waiting for Opponent's Ready": GUI.welcome_screen,
-        #     "Requesting Move from Players": GUI.welcome_screen,
-        #     "Waiting for Opponent's Move": GUI.welcome_screen,
-        #     "Game Over": GUI.welcome_screen,
-        # }
-
-        # Here's the broken switch statement mentioned by the commit.
-        # exec(state_to_function_bindings[gs["state"]])
-
-        # Verify the information is there
-
         # And add some of that information to the GUI, to prove the concept.
         core.add_text(f"{gs.state.name = }", parent="Main")
         core.add_text("Okay, so I consumed the game state.", parent="Main")
-        core.add_text(
-            f"But the state needs to be something other than 'fake'", parent="Main"
-        )
 
-    def generate_commands(self):
+    def grant_cmds(self, _beacon: RPSBeacon):
         """Dynamically generate callbacks as static methods, injecting beacon functions.
 
+            This function declares _Commands, and pushes this command's `self` 
+            into the definition scope anywhere we need to inject a dependency. 
+
         Args:
-            beacon: An active RPSBeacon object, to be injected new static methods.
+            beacon: An active RPSBeacon object, to be injected in below static methods.
         """
 
-        class Commands:
+        class _Commands:
             """Callbacks to be bound to DPG elements and Beacon signals."""
 
             # grab the GUI instance from enclosing scope
-            nonlocal self
+            nonlocal _beacon
 
             @staticmethod
             def request_game_state(sender, data):
                 """GUI method for requesting game state through a Beacon"""
-                nonlocal self
+                nonlocal _beacon
                 print(f"DEBUG | Entering func: `GUI.commands.request_game_state`")
-                print(f"DEBUG | {self = }")
+                print(f"DEBUG | {_beacon = }")
 
                 # Get our dummy User instance, because the API requires a User for auth.
                 user = core.get_data("user")
@@ -124,7 +101,7 @@ class GUI:
                     f"should immediately follow.",
                 )
                 core.run_async_function(
-                    self.beacon.get_game_state,
+                    _beacon.get_game_state,
                     data,
                     return_handler=GUI.consume_game_state,
                 )
