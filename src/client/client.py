@@ -50,14 +50,16 @@ class RPSBeacon:
         response = await self.send("/get_game_state", user.dict())
         return response
 
-    def _mock_request(self, user: User) -> GameState:
+    @staticmethod
+    def _mock_request(user: User) -> GameState:
         """A stand-in for an IO bound async request"""
         print("Enter RPSBeacon._mock_request")
         mock_state = GameState(**Mocks.states["rejected"])
         print(f"DEBUG : {mock_state.state = }")
         return mock_state
 
-    def get_game_state(self, user: User) -> GameState:
+    @staticmethod
+    def get_game_state(sender: str, data: dict) -> None:
         """Beacon Signal to request game state from Server.
 
         Args:
@@ -70,7 +72,7 @@ class RPSBeacon:
 
         # Await the game state request
         # Using a dummy request here,
-        state = self._mock_request(user)
+        state = RPSBeacon._mock_request(user)
 
         # And send it to the GUI.
         return state
