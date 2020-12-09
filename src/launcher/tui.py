@@ -30,8 +30,8 @@ from prompt_toolkit.styles import Style
 from prompt_toolkit.widgets import Frame
 
 from client.client import RPSBeacon
-from obj.game_objects import GameState, User, States
-from obj.game_objects import Mocks
+from obj.objects import GameState, User, States
+from obj.objects import Mocks
 
 m_user = Mocks.utils.make_mock_User(Mocks.users["user1"])
 

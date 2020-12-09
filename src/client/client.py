@@ -6,14 +6,15 @@ import asyncio
 import json
 from requests import Response, post
 from pydantic import BaseModel
-from obj.game_objects import User, GameState, Mocks
+from obj.objects import User, GameState, Mocks
 
 
 class RPSBeacon:
-    def __init__(self, basepoint: str = "http://127.0.0.1:8000"):
-        self.basepoint = basepoint
+    # The IP Address of the server hosting our API.
+    basepoint: str = "http://127.0.0.1:8000"
 
-    async def send(self, endpoint: str = "/", data: dict = None) -> str:
+    @staticmethod
+    def send(endpoint: str = "/", data: dict = None) -> str:
         """Most basic of interfaces for sending a request to the server.
 
         Args:
@@ -31,32 +32,32 @@ class RPSBeacon:
         """
 
         # From our basepoint, construct a fully-qualified endpoint URL
-        url = self.basepoint + endpoint
+        url: str = RPSBeacon.basepoint + endpoint
 
         # Get the data in literal JSON form.
-        jdata = json.dumps(data)
+        jdata: str = json.dumps(data)
 
         # Use `requests` native post function, and assign the response
-        response = post(url=url, data=jdata)
+        response: Response = post(url=url, data=jdata)
 
         # Then debug the response...
         print(f"DEBUG : {response = }")
 
-        # ...and return the content of it.
+        # ...and return the JSON string of it.
         return response.text
 
-    async def _request_game_state(self, user: User) -> str:
-        """Internal function to assist with a game state request"""
-        response = await self.send("/get_game_state", user.dict())
-        return response
-
     @staticmethod
-    def _mock_request(user: User) -> GameState:
-        """A stand-in for an IO bound async request"""
-        print("Enter RPSBeacon._mock_request")
-        mock_state = GameState(**Mocks.states["rejected"])
-        print(f"DEBUG : {mock_state.state = }")
-        return mock_state
+    def _request_game_state(user: User) -> GameState:
+        """Internal function to assist with a game state request"""
+        # Make the request.
+        response: str = RPSBeacon.send("/get_game_state", user.dict())
+
+        print(f"DEBUG | {response = }")
+        # Convert the JSON response to a dictionary
+        state_dict: dict = json.loads(response)
+
+        # And return a fully formed and lovingly recreated GameState object
+        return GameState(**state_dict)
 
     @staticmethod
     def get_game_state(sender: str, data: dict) -> None:
@@ -68,14 +69,20 @@ class RPSBeacon:
         """
         # DEBUG
         print(f"DEBUG | Entering func: `beacon.get_game_state`")
-        print(f"DEBUG | {user = }")
+        print(f"DEBUG | {data = }")
 
-        # Await the game state request
-        # Using a dummy request here,
-        state = RPSBeacon._mock_request(user)
+        # Extract user and state injector from `data`
+        user = data["user"]
+        injector = data["__injector"]
 
-        # And send it to the GUI.
-        return state
+        # Do our real job, which is to send a request to the server, and get a response
+        state = RPSBeacon._request_game_state(user)
+
+        # And inject that back into the GUI.
+        injector(state)
+
+        # fin
+        return None
 
 
 def main():
@@ -84,3 +91,15 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# region  DEPRECATED
+''' DEPRECATED.
+@staticmethod
+def _mock_request(user: User) -> GameState:
+    """A stand-in for an IO bound async request"""
+    print("Enter RPSBeacon._mock_request")
+    mock_state = GameState(**Mocks.states["rejected"])
+    print(f"DEBUG : {mock_state.state = }")
+    return mock_state
+'''
+# endregion

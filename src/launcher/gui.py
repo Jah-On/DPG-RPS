@@ -1,8 +1,9 @@
 from typing import Callable
+
 import dearpygui.core as core
 import dearpygui.simple as simple
 from client.client import RPSBeacon
-from obj.game_objects import GameState, User
+from obj.objects import GameState, Mocks, User
 
 
 class GUI:
@@ -16,7 +17,7 @@ class GUI:
         core.add_data("beacon", self.beacon)
 
         # Generate some fake data to use in the application.
-        fake_state = GameState(state="Matched")
+        fake_state = Mocks.make_gs(name="matched")
         core.add_data("__active_state", fake_state)
         user = User(id=7734, username="cbxm", password="passwordy")
         core.add_data("user", user)
@@ -64,29 +65,27 @@ class GUI:
         # Get game state from data store
         gs = core.get_data("__active_state")
 
-        state_to_function_bindings = {
-            "Welcome": GUI.welcome_screen,
-            "Requesting Lobby": GUI.welcome_screen,
-            "Select Opponent": GUI.welcome_screen,
-            "Sending Request to Opponent": GUI.welcome_screen,
-            "Matched": GUI.welcome_screen,
-            "Request Rejected": GUI.welcome_screen,
-            "Requesting 'Ready' Status": GUI.welcome_screen,
-            "Waiting for Opponent's Ready": GUI.welcome_screen,
-            "Requesting Move from Players": GUI.welcome_screen,
-            "Waiting for Opponent's Move": GUI.welcome_screen,
-            "Game Over": GUI.welcome_screen,
-        }
+        # state_to_function_bindings = {
+        #     "Welcome": GUI.welcome_screen,
+        #     "Requesting Lobby": GUI.welcome_screen,
+        #     "Select Opponent": GUI.welcome_screen,
+        #     "Sending Request to Opponent": GUI.welcome_screen,
+        #     "Matched": GUI.welcome_screen,
+        #     "Request Rejected": GUI.welcome_screen,
+        #     "Requesting 'Ready' Status": GUI.welcome_screen,
+        #     "Waiting for Opponent's Ready": GUI.welcome_screen,
+        #     "Requesting Move from Players": GUI.welcome_screen,
+        #     "Waiting for Opponent's Move": GUI.welcome_screen,
+        #     "Game Over": GUI.welcome_screen,
+        # }
 
         # Here's the broken switch statement mentioned by the commit.
         # exec(state_to_function_bindings[gs["state"]])
 
         # Verify the information is there
-        print(f"DEBUG | {gs['state'] = }")
 
         # And add some of that information to the GUI, to prove the concept.
-        core.add_text(gs["state"], parent="Main")
-        core.add_text(f"{gs['state'] = }", parent="Main")
+        core.add_text(f"{gs.state.name = }", parent="Main")
         core.add_text("Okay, so I consumed the game state.", parent="Main")
         core.add_text(
             f"But the state needs to be something other than 'fake'", parent="Main"
@@ -116,7 +115,7 @@ class GUI:
                 user = core.get_data("user")
 
                 # Construct data dict to pass the User and Callable to async func
-                data = {"user": user, "injector": GUI.inject_game_state}
+                data = {"user": user, "__injector": GUI.inject_game_state}
 
                 # This is where it's broken.
                 print(
@@ -155,4 +154,5 @@ class GUI:
     def start_gui(self):
         """Simple method to set the primary window and execute lift-off"""
         core.set_primary_window("Main", True)
+        core.enable_docking()
         core.start_dearpygui()
