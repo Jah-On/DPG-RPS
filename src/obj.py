@@ -4,10 +4,9 @@ Game objects inherit Pydantic's BaseModel class to imbue them with
 some useful helper fuctions, re: FastAPI.
 
 """
-from abc import ABC
-from typing import Any, Dict, List, Match, Optional, Tuple, Type
+from typing import Any, Dict, Optional, Tuple
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class BaseRequest(BaseModel):

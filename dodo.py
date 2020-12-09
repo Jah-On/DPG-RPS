@@ -26,7 +26,7 @@ def task_start_server():
 
     def _start(flag):
         print(f"{flag = }")
-        return os.system(f"uvicorn {'--reload' if flag else ''} server.server:app")
+        return os.system(f"uvicorn {'--reload' if flag else ''} server:app")
 
     return {
         "params": [
