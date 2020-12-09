@@ -19,7 +19,8 @@ class GUI:
         # Register the beacon's `this_user` identifier with data store
         core.add_data("_this_user", self.beacon.this_user)
 
-        # Let's add
+        # Let's add a mock GameState to the register, too.
+        core.add_data("__active_state", Mocks.make_gs("welcome"))
 
         # Dynamically generate static methods to be used as callbacks
         # This grants our Beacon instance a .commands namespace on init.
@@ -105,14 +106,24 @@ class GUI:
         self.commands = _Commands
 
     def main(self):
-        with simple.window("Main"):
-            # core.show_logger()
-            core.add_text("Hello World!", parent="Main")
-
-        core.add_window("Game State")
+        core.add_window("Main")
         core.end()
 
-        core.add_text("GS text", parent="Game State")
+        GUI._mod_game_state()
+
+        core.add_window("Current User")
+        core.end()
+
+        core.add_window("Opponent")
+        core.end()
+
+        core.add_window("Game Prompt")
+        core.end()
+
+        core.add_window("Move Select")
+        core.end()
+
+        core.add_text("GameState stuff", parent="Game State")
 
         core.set_primary_window("Main", True)
         core.add_button(
@@ -122,6 +133,16 @@ class GUI:
             callback_data="mock data" + "moremockdata",
         )
         core.add_text("State", source="_state", parent="Game State")
+
+    @staticmethod
+    def _mod_game_state():
+        with simple.window("Game State"):
+            core.add_text("This is the Game State module.")
+            core.add_table("Game State", ["property", "value"])
+            gs: GameState = core.get_data("__active_state")
+            for i, attr in zip(range(0, 7), gs):
+                print(i)
+                core.add_row("Game State", [attr[0], attr[1]])
 
     @staticmethod
     def welcome_screen():
