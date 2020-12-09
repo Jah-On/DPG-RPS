@@ -1,6 +1,7 @@
 """Module for building a TUI for Rock Paper Scissors."""
 
 from typing import Callable
+from coverage import control
 
 from prompt_toolkit import PromptSession, prompt
 from prompt_toolkit import print_formatted_text as print
@@ -9,11 +10,16 @@ from prompt_toolkit.buffer import Buffer
 from prompt_toolkit.layout.containers import (
     Float,
     FloatContainer,
+    Container,
     VSplit,
     HSplit,
     Window,
 )
-from prompt_toolkit.layout.controls import BufferControl, FormattedTextControl
+from prompt_toolkit.layout.controls import (
+    BufferControl,
+    FormattedTextControl,
+    UIControl,
+)
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.shortcuts import message_dialog
 from prompt_toolkit.formatted_text.base import FormattedText
@@ -27,24 +33,7 @@ from client.client import RPSBeacon
 from obj.game_objects import GameState, User, States
 from obj.game_objects import Mocks
 
-m_user = Mocks.utils.make_mock_GameState(Mocks.mocks.users["user1"])
-
-LIPSUM = " ".join(
-    (
-        """Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Maecenas quis interdum enim. Nam viverra, mauris et blandit malesuada, ante est
-bibendum mauris, ac dignissim dui tellus quis ligula. Aenean condimentum leo at
-dignissim placerat. In vel dictum ex, vulputate accumsan mi. Donec ut quam
-placerat massa tempor elementum. Sed tristique mauris ac suscipit euismod. Ut
-tempus vehicula augue non venenatis. Mauris aliquam velit turpis, nec congue
-risus aliquam sit amet. Pellentesque blandit scelerisque felis, faucibus
-consequat ante. Curabitur tempor tortor a imperdiet tincidunt. Nam sed justo
-sit amet odio bibendum congue. Quisque varius ligula nec ligula gravida, sed
-convallis augue faucibus. Nunc ornare pharetra bibendum. Praesent blandit ex
-quis sodales maximus. """
-        * 100
-    ).split()
-)
+m_user = Mocks.utils.make_mock_User(Mocks.users["user1"])
 
 
 # 1. The layout
@@ -54,82 +43,92 @@ quit_text = "Press ESCAPE DELETE to quit."
 
 
 class TUI:
+    def plank(
+        self,
+        left: UIControl,
+        top: UIControl,
+        bottom: UIControl,
+    ) -> Container:
+        """The primary drawing surface for this app."""
+        ctr = VSplit(
+            [Window(content=left)],
+            HSplit(
+                [
+                    Window(content=top),
+                    Window(content=bottom),
+                ]
+            ),
+        )
+        return ctr
+
+    def gs_control(self, gs_ft: FormattedText) -> FormattedTextControl:
+        _style = Style(
+            [
+                ("game_id", "ansigreen"),
+                ("state", ""),
+                ("players", ""),
+                ("ready", ""),
+                ("current_moves", ""),
+                ("moves_history", ""),
+                ("winner", ""),
+            ]
+        )
+        return FormattedTextControl(
+            text=gs_ft, style="class:game_id black-on-white, class:state ansigreen"
+        )
+
+    def empty_control(self) -> UIControl:
+        return FormattedTextControl(text="")
+
     def _build_keybindings(self, kb: KeyBindings) -> KeyBindings:
         @kb.add("escape", "delete")
         def exit_(event):
-            """
-            Pressing Ctrl-Q will exit the user interface.
-
-            Setting a return value means: quit the event loop that drives the user
-            interface and return this value from the `Application.run()` call.
-            """
+            """Pressing ESC DEL will exit the user interface."""
             event.app.exit()
 
         return kb
+
+    def _consume_game_state(self, gs: GameState) -> None:
+        """Directly apply game state to UI"""
+        return None
+
+    def _gs_to_FT(self, gs: GameState) -> FormattedText:
+        """Helper to convert game state to a FormattedText object"""
+
+        text = FormattedText(
+            [
+                ("class:game_id", str(gs.game_id)),
+                ("class:state", str(gs.state)),
+                ("class:players", str(gs.players)),
+                ("class:ready", str(gs.ready)),
+                ("class:current_moves", str(gs.current_moves)),
+                ("class:moves_history", str(gs.moves_history)),
+                ("class:winner", str(gs.winner)),
+            ]
+        )
+        return text
 
     def __init__(self, beacon: RPSBeacon):
         # Save our beacon
         self.beacon = beacon
 
-        # region Define layout
-
-        buffer1 = Buffer()
-
-        root_ctr = VSplit(
-            [
-                # One window that holds the BufferControl with the default buffer on
-                # the left.
-                Window(content=BufferControl(buffer=buffer1)),
-                # A vertical line in the middle. We explicitly specify the width, to
-                # make sure that the layout engine will not try to divide the whole
-                # width by three for all these windows. The window will simply fill its
-                # content by repeating this character.
-                Window(width=1, char="|"),
-                # Display the text 'Hello world' on the right.
-                Window(content=FormattedTextControl(text="Hello world")),
-            ]
-        )
-
-        body = FloatContainer(
-            content=Window(FormattedTextControl(LIPSUM), wrap_lines=True),
-            floats=[
-                # Important note: Wrapping the floating objects in a 'Frame' is
-                #                 only required for drawing the border around the
-                #                 floating text. We do it here to make the layout more
-                #                 obvious.
-                # Left float.
-                Float(
-                    Frame(Window(FormattedTextControl(left_text), width=20, height=4)),
-                    transparent=False,
-                    left=0,
-                ),
-                # Right float.
-                Float(
-                    Frame(Window(FormattedTextControl(right_text), width=20, height=4)),
-                    transparent=True,
-                    right=0,
-                ),
-                # Quit text.
-                Float(
-                    Frame(
-                        Window(FormattedTextControl(quit_text), width=18, height=1),
-                        style="bg:#ff44ff #ffffff",
-                    ),
-                    top=1,
-                ),
-            ],
-        )
-
-        # endregion
+        # Define a FormattedText object for the game state
+        self._game_state = beacon.get_game_state(m_user)
+        gsFT = self._gs_to_FT(self._game_state)
 
         # Create a keybinding object, and pass it to a helper function to decorate.
         kb = KeyBindings()
         kb = self._build_keybindings(kb)
 
+        gs_pane = self.gs_control(gsFT)
+        empty = self.empty_control()
+        hard_plank = self.plank(left=empty, top=gs_pane, bottom=empty)
+
         # Instantiate an app, provide our layout & keybindings, and make it full-screen
         self.app = Application(
-            layout=Layout(body),
+            layout=Layout(hard_plank),
             key_bindings=kb,
+            mouse_support=True,
             full_screen=True,
         )
 

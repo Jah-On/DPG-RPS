@@ -2,11 +2,11 @@
 
 from abc import abstractmethod
 from typing import Any, Callable, Coroutine, Dict
+import asyncio
 import json
 from requests import Response, post
 from pydantic import BaseModel
-
-from obj.game_objects import User, GameState
+from obj.game_objects import User, GameState, Mocks
 
 
 class RPSBeacon:
@@ -50,18 +50,14 @@ class RPSBeacon:
         response = await self.send("/get_game_state", user.dict())
         return response
 
-    async def _mock_request(self, user: User) -> GameState:
+    def _mock_request(self, user: User) -> GameState:
         """A stand-in for an IO bound async request"""
         print("Enter RPSBeacon._mock_request")
-        mock_state = GameState(state="Requesting Lobby")
+        mock_state = GameState(**Mocks.states["rejected"])
         print(f"DEBUG : {mock_state.state = }")
         return mock_state
 
-    async def get_game_state(
-        self,
-        sender: str,
-        data: dict,
-    ) -> None:
+    def get_game_state(self, user: User) -> GameState:
         """Beacon Signal to request game state from Server.
 
         Args:
@@ -70,25 +66,14 @@ class RPSBeacon:
         """
         # DEBUG
         print(f"DEBUG | Entering func: `beacon.get_game_state`")
-        print(f"DEBUG | {sender = }")
-        print(f"DEBUG | {data = }")
-
-        # Extract user from data
-        user = data["user"]
-        print(f"DEBUG | {repr(user) = }")
-
-        # Extract the function used to send data back to GUI
-        injector = data["injector"]
-        print(f"DEBUG | {repr(injector) = }")
+        print(f"DEBUG | {user = }")
 
         # Await the game state request
         # Using a dummy request here,
-        state = await self._mock_request(user)
+        state = self._mock_request(user)
 
         # And send it to the GUI.
-        injector(state)
-
-        return None
+        return state
 
 
 def main():
